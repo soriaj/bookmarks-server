@@ -3,8 +3,8 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
-const bookmarksRouter = require('./bookmarks/booksmarks-router')
 const { NODE_ENV } = require('./config')
+const bookmarksRouter = require('./bookmarks/bookmarks-router')
 
 const app = express()
 
@@ -27,11 +27,11 @@ app.use(function validateBearerToken(req, res, next) {
    next()
 })
 
+app.use(bookmarksRouter)
+
 app.get('/', (req, res) => {
    res.send('Hello, World!')
 })
-
-app.get(bookmarksRouter)
 
 app.use(function errorHandler(error, req, res, next) {
    let response
