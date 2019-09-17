@@ -52,17 +52,17 @@ bookmarksRouter
 
 bookmarksRouter
    .route('/bookmarks/:id')
-   // .get((req, res) => {
-   //    const { id } = req.params
-   //    const bookmark = bookmarks.find(book => book.id == id);
+   .get((req, res) => {
+      const { id } = req.params
+      const bookmark = bookmarks.find(book => book.id == id);
 
-   //    //make sure we find a book
-   //    if(!bookmark){
-   //       logger.error(`Bookmark with id ${id} not found`);
-   //       return res.status(404).send('Bookmark Not Found');
-   //    }
-   //    res.json(bookmark)
-   // })
+      //make sure we find a book
+      if(!bookmark){
+         logger.error(`Bookmark with id ${id} not found`);
+         return res.status(404).send('Bookmark Not Found');
+      }
+      res.json(bookmark)
+   })
    // .delete((req, res) => {
    //    const { id } = req.params
    //    const bookmarkIndex = bookmarks.findIndex(book => book.id == id);
