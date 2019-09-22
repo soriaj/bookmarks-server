@@ -4,7 +4,7 @@ const { TEST_DB_URL } = require('../src/config')
 const app = require('../src/app')
 const setTZ = require('set-tz')
 const { makeBookmarksArray } = require('./bookmarks.fixture') // test bookmarks
-setTZ('UTC')
+setTZ('UTC') // set timezone for test
 
 describe.only('Bookmarks Endpoint', () => {
    let db

@@ -11,6 +11,21 @@ Complete the following steps to start a new project (NEW-PROJECT-NAME):
 3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
 4. Install the node dependencies `npm install`
 5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
+6. Add API details and Database details to .env. Additionally migration setup with DB details as well. 
+
+```bash
+MIGRATION_DB_HOST=<local dev host>
+MIGRATION_DB_PORT=5432
+MIGRATION_DB_NAME=<db name>
+MIGRATION_DB_USER=<db user>
+MIGRATION_DB_PASS=<db password if needed>
+DB_URL=<db endpoint>
+TEST_DB_URL=<test db endpoint>
+```
+7. Add db and test_db url paths to config file
+8. Run migration command to create database table
+9. Seed database data using ./seeds sql script
+10. Test database and routes /GET and /GET/:id
 
 ## Scripts
 
