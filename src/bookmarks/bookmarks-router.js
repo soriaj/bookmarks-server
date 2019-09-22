@@ -17,7 +17,7 @@ bookmarksRouter
          })
          .catch(next)
    })
-   .post(bodyParser, (req, res) => {
+   .post(bodyParser, (req, res, next) => {
       const { title, url, rating=1, description } = req.body;
       
       if(!title){
@@ -40,21 +40,28 @@ bookmarksRouter
          return res.status(400).send('Invalid Description')
       }
 
-      const id = uuid();
+      // const id = uuid();
       let rate = Number(rating);
 
       const bookmark = {
-         id,
+         // id,
          title,
          url,
          rating: rate,
          description
       };
 
-      bookmarks.push(bookmark);
+      const knewInstance = req.app.get('db')
+      BookmarksService.insertBookmarks(knewInstance, bookmark)
+         .then(bookmark => {
+            logger.info(`Bookmark with id ${bookmark.id} created`);
+            return res.status(201).location(`http://localhost:8000/bookmark/${bookmark.id}`).json(bookmark)
+         })
+         .catch(next)
+      // bookmarks.push(bookmark);
 
-      logger.info(`Bookmark with id ${id} created`);
-      res.status(201).location(`http://localhost:8000/bookmark/${id}`).json(bookmark);
+      // // logger.info(`Bookmark with id ${id} created`);
+      // res.status(201).location(`http://localhost:8000/bookmark/`).json(bookmark);
    })
 
 bookmarksRouter
@@ -72,9 +79,10 @@ bookmarksRouter
          })
          .catch(next)
    })
-   .delete((req, res) => {
+   .delete((req, res, next) => {
       const { id } = req.params
-      const bookmarkIndex = bookmarks.findIndex(bookmark => bookmark.id == id);
+      // const bookmarkIndex = bookmarks.findIndex(bookmark => bookmark.id == id);
+      
 
       if(bookmarkIndex === -1){
          logger.error(`Bookmark with id ${id} not found`);
