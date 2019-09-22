@@ -92,7 +92,7 @@ describe.only('Bookmarks Endpoint', () => {
          const newBookmark = {
             title: 'New Bookmark Title',
             url: 'http://www.my-new-bookmark.com',
-            rating: 4,
+            rating: 1,
             description: 'New Bookmark POST Test'
          }
          return supertest(app)
