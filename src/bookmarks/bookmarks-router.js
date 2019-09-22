@@ -19,49 +19,46 @@ bookmarksRouter
    })
    .post(bodyParser, (req, res, next) => {
       const { title, url, rating=1, description } = req.body;
-      
-      if(!title){
-         logger.error('Title is required')
-         return res.status(400).send('Invalid Title')
-      }
-
-      if(!url){
-         logger.error('Url is required')
-         return res.status(400).send('Invalid Url')
-      }
-
-      if(!rating){
-         logger.error('Rating is required')
-         return res.status(400).send('Invalid Rating')
-      }
-
-      if(!description){
-         logger.error('Description is required')
-         return res.status(400).send('Invalid Description')
-      }
-
-      // const id = uuid();
       let rate = Number(rating);
-
-      const bookmark = {
-         // id,
-         title,
-         url,
-         rating: rate,
-         description
-      };
-
+      const newBookmark = { title, url, rating: rate, description };
       const knewInstance = req.app.get('db')
-      BookmarksService.insertBookmarks(knewInstance, bookmark)
+      
+      // if(!title){
+      //    logger.error('Title is required')
+      //    return res.status(400).send('Invalid Title')
+      // }
+
+      // if(!url){
+      //    logger.error('Url is required')
+      //    return res.status(400).send('Invalid Url')
+      // }
+
+      // if(!rating){
+      //    logger.error('Rating is required')
+      //    return res.status(400).send('Invalid Rating')
+      // }
+
+      // if(!description){
+      //    logger.error('Description is required')
+      //    return res.status(400).send('Invalid Description')
+      // }
+      
+      for(const [key, value] of Object.entries(newBookmark)){
+         if(value == null){
+            return res.status(400).json({ error: { message: `Missing '${key}' in request body` }})
+         }
+      }
+      // const id = uuid();
+      BookmarksService.insertBookmarks(knewInstance, newBookmark)
          .then(bookmark => {
             logger.info(`Bookmark with id ${bookmark.id} created`);
-            return res.status(201).location(`http://localhost:8000/bookmark/${bookmark.id}`).json(bookmark)
+            return res.status(201).location(`/bookmarks/${bookmark.id}`).json(bookmark)
          })
          .catch(next)
-      // bookmarks.push(bookmark);
+      // bookmarks.push(newBookmark);
 
       // // logger.info(`Bookmark with id ${id} created`);
-      // res.status(201).location(`http://localhost:8000/bookmark/`).json(bookmark);
+      // res.status(201).location(`http://localhost:8000/bookmark/`).json(newBookmark);
    })
 
 bookmarksRouter

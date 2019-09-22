@@ -87,18 +87,53 @@ describe.only('Bookmarks Endpoint', () => {
       })
    })
 
-   describe.only('POST /bookmarks', () => {
-      it('creates an bookmark, responding with 201 and the new bookmark', () => {
-         return supertest(app)
-         .post('/bookmarks')
-         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-         .send({
+   describe('POST /bookmarks', () => {
+      it('creates a bookmark, responding with 201 and the new bookmark', () => {
+         const newBookmark = {
             title: 'New Bookmark Title',
             url: 'http://www.my-new-bookmark.com',
             rating: 4,
             description: 'New Bookmark POST Test'
-         })
+         }
+         return supertest(app)
+         .post('/bookmarks')
+         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+         .send(newBookmark)
          .expect(201)
+         .expect(res => {
+            expect(res.body).to.have.property('id')
+            expect(res.body.title).to.eql(newBookmark.title)
+            expect(res.body.url).to.eql(newBookmark.url)
+            expect(res.body.rating).to.eql(newBookmark.rating)
+            expect(res.body.description).to.eql(newBookmark.description)
+            expect(res.headers.location).to.eql(`/bookmarks/${res.body.id}`)
+         })
+         .then(postRes => {
+            supertest(app)
+               .get(`/bookmarks/${postRes.body.id}`)
+               .expect(postRes.body)
+         })
+      })
+
+      const requiredFields = ['title', 'url', 'rating', 'description']
+
+      requiredFields.forEach(field => {
+         const newBookmark = {
+            title: 'New Bookmark Title',
+            url: 'http://www.my-new-bookmark.com',
+            rating: 4,
+            description: 'New Bookmark POST Test'
+         }
+
+         it(`responds with 400 and an error message when the '${field}' is missing`, () => {
+            delete newBookmark[field]
+
+            return supertest(app)
+               .post('/bookmarks')
+               .send(newBookmark)
+               .expect(400, { error: { message: `Missing '${field}' in request body`}})
+         })
+
       })
    })
 })
