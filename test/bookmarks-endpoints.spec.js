@@ -24,6 +24,14 @@ describe.only('Bookmarks Endpoint', () => {
    afterEach('cleanup', () => db('bookmarks').truncate())
 
    describe('GET /bookmarks', () => {
+      context('no authorization', () => {
+         it('response with unauthorized request', () => {
+            return supertest(app)
+               .get('/bookmarks')
+               .expect(401, { error: 'Unauthorized request' })
+         })
+      })
+
       context('Given no bookmarks', () => {
          it(`responds with 200 and an empty list`, () => {
             return supertest(app)

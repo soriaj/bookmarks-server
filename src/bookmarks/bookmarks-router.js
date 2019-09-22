@@ -82,7 +82,13 @@ bookmarksRouter
    .delete((req, res, next) => {
       const { id } = req.params
       // const bookmarkIndex = bookmarks.findIndex(bookmark => bookmark.id == id);
-      
+      BookmarksService.getById(knewInstance, id)
+         .then(bookmark => {
+            if(!bookmark){
+               logger.error(`Bookmark with id ${id} not found`)
+               return res.status(404).json({ error: { message: 'Bookmark Not Found' }});
+            }
+         })
 
       if(bookmarkIndex === -1){
          logger.error(`Bookmark with id ${id} not found`);
