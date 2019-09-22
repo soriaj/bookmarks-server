@@ -86,4 +86,19 @@ describe.only('Bookmarks Endpoint', () => {
          })
       })
    })
+
+   describe.only('POST /bookmarks', () => {
+      it('creates an bookmark, responding with 201 and the new bookmark', () => {
+         return supertest(app)
+         .post('/bookmarks')
+         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+         .send({
+            title: 'New Bookmark Title',
+            url: 'http://www.my-new-bookmark.com',
+            rating: 4,
+            description: 'New Bookmark POST Test'
+         })
+         .expect(201)
+      })
+   })
 })
