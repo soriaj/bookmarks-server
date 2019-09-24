@@ -174,7 +174,7 @@ describe.only('Bookmarks Endpoint', () => {
       })
    })
 
-   describe.only('PATCH /api/bookmarks/:bookmark_id', () => {
+   describe('PATCH /api/bookmarks/:bookmark_id', () => {
       context('Given no bookmarks', () => {
          it('responds with 404', () => {
             const bookmarkId = 'e9f3ef14-63a2-419c-8e5a-409f5984b341'
