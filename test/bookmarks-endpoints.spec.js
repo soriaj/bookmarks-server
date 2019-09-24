@@ -218,6 +218,15 @@ describe.only('Bookmarks Endpoint', () => {
                      .expect(expectedBookmark)
                })
          })
+
+         it('responds with 400 when no required fields are supplied', () => {
+            const idToUpdate = 'e9f3ef14-63a2-419c-8e5a-409f5984b65e'
+            return supertest(app)
+               .patch(`/api/bookmarks/${idToUpdate}`)
+               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+               .send({ bogusField: 'Bad field data to send' })
+               .expect(400, { error: { message: `Request body must contain either 'title', 'url', 'rating' or 'description'`} })
+         })
       })
    })
 })
