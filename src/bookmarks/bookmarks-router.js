@@ -84,8 +84,9 @@ bookmarksRouter
          return res.status(400).json({ error: { message: `Request body must contain either 'title', 'url', 'rating' or 'description'`} })
       }
 
+      // res.status(204).end()
       BookmarksService.updateBookmark(knexInstance, bookmark_id, bookmarkToUpdate)
-         .then(numRowsAffected => {
+         .then(rowsAffected => {
             res.status(204).end()
          })
          .catch(next)

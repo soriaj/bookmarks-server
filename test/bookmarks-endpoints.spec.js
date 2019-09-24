@@ -180,7 +180,43 @@ describe.only('Bookmarks Endpoint', () => {
             const bookmarkId = 'e9f3ef14-63a2-419c-8e5a-409f5984b341'
             return supertest(app)
                .patch(`/api/bookmarks/${bookmarkId}`)
+               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                .expect(404, { error: { message: `Bookmark doesn't exist` } })
+         })
+      })
+
+      context('Given there are bookmarks in the database', () => {
+         const testBookmarks = makeBookmarksArray()
+
+         beforeEach('insert bookmarks', () => {
+            return db
+               .into('bookmarks')
+               .insert(testBookmarks)
+         })
+
+         it('responds with 204 and updates the bookmarks', () => {
+            const idToUpdate = 'e9f3ef14-63a2-419c-8e5a-409f5984b65e'
+            const updateBookmark = {
+               title: 'Updated Bookmark Title',
+               url: 'https://new-bookmark-url.com',
+               rating: 5,
+               description: 'Updated Bookmark Description',
+            }
+            const findBookmarkToUpdate = testBookmarks.filter(bookmark => bookmark.id == idToUpdate)
+            const expectedBookmark = {
+               ...findBookmarkToUpdate,
+               ...updateBookmark
+            }
+            return supertest(app)
+               .patch(`/api/bookmarks/${idToUpdate}`)
+               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+               .send(updateBookmark)
+               .expect(204)
+               .then(res => {
+                  supertest(app)
+                     .get(`/api/bookmarks/${idToUpdate}`)
+                     .expect(expectedBookmark)
+               })
          })
       })
    })
