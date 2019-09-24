@@ -227,6 +227,30 @@ describe.only('Bookmarks Endpoint', () => {
                .send({ bogusField: 'Bad field data to send' })
                .expect(400, { error: { message: `Request body must contain either 'title', 'url', 'rating' or 'description'`} })
          })
+
+         it('responds with 204 when updating only a part of the fields', () => {
+            const idToUpdate = 'e9f3ef14-63a2-419c-8e5a-409f5984b65e'
+            const updateBookmark = { title: 'Updated Title Only' }
+            const findBookmarkToUpdate = testBookmarks.filter(bookmark => bookmark.id == idToUpdate)
+            const expectedBookmark = {
+               ...findBookmarkToUpdate,
+               ...updateBookmark
+            }
+
+            return supertest(app)
+               .patch(`/api/bookmarks/${idToUpdate}`)
+               .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+               .send({
+                  ...updateBookmark,
+                  bogusField: 'Bad field data to send, not in GET response'
+               })
+               .expect(204)
+               .then(res => {
+                  .get(`'/api/bookmarks/${idToUpdate}`)
+                  .expect(expectedBookmark)
+               })
+
+         })
       })
    })
 })
