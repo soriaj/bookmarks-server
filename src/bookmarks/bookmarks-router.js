@@ -1,6 +1,5 @@
 const path = require('path')
 const express = require('express')
-const uuid = require('uuid/v4')
 const logger = require('../logger')
 const xss = require('xss')
 // const { bookmarks } = require('../store')
@@ -29,7 +28,6 @@ bookmarksRouter
    })
    .post(bodyParser, (req, res, next) => {
       const { title, url, rating, description } = req.body;
-      let rate = Number(rating);
       const newBookmark = { title, url, rating, description };
       const knexInstance = req.app.get('db')
       
@@ -61,7 +59,7 @@ bookmarksRouter
          })
          .catch(next)
    })
-   .get((req, res, next) => {
+   .get((req, res) => {
       res.json(serializeBookmark(res.bookmark))
    })
    .delete((req, res, next) => {
@@ -86,7 +84,7 @@ bookmarksRouter
 
       // res.status(204).end()
       BookmarksService.updateBookmark(knexInstance, bookmark_id, bookmarkToUpdate)
-         .then(rowsAffected => {
+         .then(() => {
             res.status(204).end()
          })
          .catch(next)
