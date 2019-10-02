@@ -1,4 +1,4 @@
-CREATE EXTENSION "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE bookmarks (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR NOT NULL,
